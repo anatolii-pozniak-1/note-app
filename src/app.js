@@ -1,6 +1,8 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import noteRoutes from "./routes/note.route.js";  
+
 
 dotenv.config();
 
@@ -17,5 +19,8 @@ app.get("/health", (req, res) => {
     timestamp: new Date().toISOString()
   });
 });
+
+// Register routes
+app.use("/notes", noteRoutes);
 
 export default app;
