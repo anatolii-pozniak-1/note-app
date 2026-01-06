@@ -1,11 +1,26 @@
 import { Note } from "../models/note.model.js";
 
 export const getNotes = async (req, res) => {
-  res.json({ message: "getNotes controller — not implemented yet" });
+  try {
+    const notes = await Note.find().sort({ createdAt: -1 });
+    return res.json(notes);
+  } catch (error) {
+    return res.status(500).json({ message: "Помилка отримання нотаток" });
+  }
 };
 
 export const getNoteById = async (req, res) => {
-  res.json({ message: "getNoteById controller — not implemented yet" });
+  try {
+    const note = await Note.findById(req.params.id);
+
+    if (!note) {
+      return res.status(404).json({ message: "Нотатку не знайдено" });
+    }
+
+    return res.json(note);
+  } catch (error) {
+    return res.status(400).json({ message: "Помилка отримання нотатки" });
+  }
 };
 
 export const createNote = async (req, res) => {
@@ -33,10 +48,38 @@ export const createNote = async (req, res) => {
   }
 };
 
-export const updateNote = async (req, res) => {
-  res.json({ message: "updateNote controller — not implemented yet" });
+export const updateNote = async (req, res) =>  {
+  try {
+    const { title, content } = req.body;
+
+    const note = await Note.findByIdAndUpdate(
+      req.params.id,
+      { title, content },
+      { new: true, runValidators: true }
+    );
+
+    if (!note) {
+      return res.status(404).json({ message: "Нотатку не знайдено" });
+    }
+
+    return res.json(note);
+  } catch (error) {
+    return res.status(400).json({ message: "Помилка оновлення нотатки" });
+  }
 };
 
+
 export const deleteNote = async (req, res) => {
-  res.json({ message: "deleteNote controller — not implemented yet" });
+   try {
+    const note = await Note.findByIdAndDelete(req.params.id);
+
+    if (!note) {
+      return res.status(404).json({ message: "Нотатку не знайдено" });
+    }
+
+    return res.json({ success: true });
+  } catch (error) {
+    return res.status(400).json({ message: "Помилка видалення нотатки" });
+  }
+
 };
