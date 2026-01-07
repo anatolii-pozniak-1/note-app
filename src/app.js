@@ -2,7 +2,8 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import noteRoutes from "./routes/note.route.js";  
-
+import swaggerUi from "swagger-ui-express";
+import { swaggerSpec } from "./docs/swagger.js";
 
 dotenv.config();
 
@@ -22,5 +23,7 @@ app.get("/health", (req, res) => {
 
 // Register routes
 app.use("/notes", noteRoutes);
+// Swagger docs
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 export default app;
